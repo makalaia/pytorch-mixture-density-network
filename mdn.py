@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+import requests
+import os
 
 from sklearn.model_selection import train_test_split
 from torch.distributions.normal import Normal
@@ -53,7 +55,10 @@ def parse_date(series):
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+if not os.path.exists('Metro_Interstate_Traffic_Volume.csv.gz'):
+    req = requests.get('https://archive.ics.uci.edu/ml/machine-learning-databases/00492/Metro_Interstate_Traffic_Volume.csv.gz')
+    with open('Metro_Interstate_Traffic_Volume.csv.gz', mode='wb') as file:
+        file.write(req.content)
 
 x_scaler = StandardScaler()
 y_scaler = RobustScaler(quantile_range=(.1, .9))
